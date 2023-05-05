@@ -1,9 +1,12 @@
   version: 2.1
   jobs:
     run-test:
+      docker:
+        - image: nginxdemos/hello
       # Steps to the job
       steps:
         - checkout
+        - setup_remote_docker
         - run:
             name: Install Docker Compose
             environment:
