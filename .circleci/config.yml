@@ -2,7 +2,7 @@
   jobs:
     run-test:
       docker:
-        - image: nginxdemos/hello
+        - image: cimg/base:2021.04
       # Steps to the job
       steps:
         - checkout
