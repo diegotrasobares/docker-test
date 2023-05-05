@@ -6,7 +6,6 @@
       # Steps to the job
       steps:
         - checkout
-        - run: docker pull nginxdemos/hello
         - run:
             name: Open docker container
             command: docker compose up
