@@ -18,7 +18,7 @@
 
         - run:
             name: Open docker container
-            command: docker compose up
+            command: docker compose up -d
 
         - run: wait-for-it.sh localhost:8080 -- echo "docker image is running fine"
 
