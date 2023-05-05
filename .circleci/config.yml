@@ -1,39 +1,40 @@
-  version: 2.1
-  jobs:
-    run-test:
-      docker:
-        - image: cimg/base:2023.05
-      # Steps to the job
-      steps:
-        - checkout
-        - setup_remote_docker
-        - run:
-            name: Install Docker Compose
-            environment:
-              COMPOSE_VERSION: '1.29.2'
-            command: |
-              curl -L "https://github.com/docker/compose/releases/download/2.17.3/docker-compose-$(uname -s)-$(uname -m)" -o ~/docker-compose
-              chmod +x ~/docker-compose
-              sudo mv ~/docker-compose /usr/local/bin/docker-compose
+version: 2.1
+jobs:
+  run-test:
+    docker:
+      - image: cimg/base:2023.05
+    # Steps to the job
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Install Docker Compose
+          environment:
+            COMPOSE_VERSION: '1.29.2'
+          command: |
+            curl -L "https://github.com/docker/compose/releases/download/2.17.3/docker-compose-$(uname -s)-$(uname -m)" -o ~/docker-compose
+            chmod +x ~/docker-compose
+            sudo mv ~/docker-compose /usr/local/bin/docker-compose
 
-        - run:
-            name: Open docker container
-            command: docker compose up -d
+      - run:
+          name: Install wait-for-it.sh
+          command: |
+            wget https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh
+            chmod +x wait-for-it.sh
+            sudo mv wait-for-it.sh /usr/local/bin/
 
-        - run: wait-for-it.sh localhost:8080 -- echo "docker image is running fine"
+      - run:
+          name: Open docker container
+          command: docker compose up -d
 
-        - run:
-            name: Close docker container
-            command: docker compose down
+      - run: wait-for-it.sh localhost:8080 -- echo "docker image is running fine"
 
-  # Invoke jobs via workflows
-  workflows:
-    run-test-workflow:
-      jobs:
-        - run-test
+      - run:
+          name: Close docker container
+          command: docker compose down
 
-
-
-
-
-
+# Invoke jobs via workflows
+workflows:
+  run-test-workflow:
+    jobs:
+      - run-test
